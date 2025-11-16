@@ -6,3 +6,6 @@ sentence-transformers==2.2.2
 requests>=2.32.3
 numpy==1.24.3
 gunicorn==21.2.0
+Flask==2.3.3
+line-bot-sdk==3.21.0
+python-dotenv==1.0.0
