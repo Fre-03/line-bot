@@ -11,7 +11,7 @@ from datetime import datetime
 import numpy as np
 
 # 配置日誌
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Flask app
@@ -235,25 +235,17 @@ def send_line_reply(reply_token, message_text):
 # === Webhook Endpoint ===
 @app.route("/")
 def home():
-    return "LINE Bot is running 24/7!"
+    return "LINE Bot is running 24/7 on Render!"
 
 @app.route("/callback", methods=['POST'])
 def callback():
-    # Get request signature and body
-    signature = request.headers.get('X-Line-Signature', '')
+    signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
     
-    logger.info(f"📨 Received webhook request")
-    
-    # Handle webhook request
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
-        logger.error("Invalid signature error")
         abort(400)
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        abort(500)
     
     return 'OK'
 
