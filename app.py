@@ -620,8 +620,8 @@ def send_line_reply(reply_token, message_text):
         return False
 
 # === Webhook Endpoint ===
-@app.route("/webhook", methods=['POST'])
-def webhook():
+@app.route("/callback", methods=['POST'])
+def callback():
     signature = request.headers.get('X-Line-Signature', '')
     body = request.get_data(as_text=True)
     
@@ -634,9 +634,9 @@ def webhook():
     except InvalidSignatureError:
         abort(400)
     except Exception as e:
-        logger.error(f"❌ Webhook 錯誤: {e}")
+        logger.error(f"Webhook 錯誤: {e}")
         abort(500)
-
+        
 @handler.add(MessageEvent, message=TextMessageContent)
 def handle_message(event):
     try:
