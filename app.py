@@ -235,16 +235,19 @@ def send_line_reply(reply_token, message_text):
 # === Webhook Endpoint ===
 @app.route("/")
 def home():
-    return "LINE Bot is running 24/7 on Render!"
+    return "LINE Bot is running 24/7 on PythonAnywhere!"
 
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
     body = request.get_data(as_text=True)
     
+    logger.info("Webhook received")
+    
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        logger.error("Invalid signature")
         abort(400)
     
     return 'OK'
@@ -277,5 +280,5 @@ def handle_message(event):
         logger.error(f"❌ Error handling message: {e}")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    # PythonAnywhere will use WSGI, so this won't run in production
+    app.run(debug=True)
