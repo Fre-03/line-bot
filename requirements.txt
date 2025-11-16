@@ -1,0 +1,9 @@
+Flask==2.3.3
+line-bot-sdk==3.0.0
+psycopg2-binary==2.9.7
+langchain==0.0.346
+sentence-transformers==2.2.2
+requests==2.31.0
+numpy==1.24.3
+torch==2.0.1
+transformers==4.30.2
