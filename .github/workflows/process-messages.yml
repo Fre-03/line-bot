@@ -1,36 +1,32 @@
 name: Process LINE Messages
+
 on:
+  workflow_dispatch:
   schedule:
-    - cron: '*/2 * * * *'  # Run every 2 minutes
-  workflow_dispatch:  # Manual trigger
+    - cron: '*/5 * * * *'  # Run every 5 minutes
 
 jobs:
   process-messages:
     runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
-    
+      uses: actions/checkout@v4
+      
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-    
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    
-    - name: Run Message Processor
+        
+    - name: Run message processor
       env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
         LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
-        POSTGRES_CONNECTION_STRING: ${{ secrets.POSTGRES_CONNECTION_STRING }}
-      run: python bot_processor.py
-    
-    - name: Notify Success
-      if: success()
-      run: echo "✅ Messages processed successfully"
-    
-    - name: Notify Failure
-      if: failure()
-      run: echo "❌ Message processing failed"
+        LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
+      run: |
+        python bot_processor.py
